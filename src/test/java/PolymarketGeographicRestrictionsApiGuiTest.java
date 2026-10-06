@@ -1,3 +1,6 @@
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -11,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
@@ -23,6 +27,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicates;
@@ -32,7 +37,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 public class PolymarketGeographicRestrictionsApiGuiTest {
 
-	private static Method METHOD_MAP_TO_INT, METHOD_TEST, METHOD_GET_CLASS, METHOD_TO_STRING = null;
+	private static Method METHOD_MAP_TO_INT, METHOD_TEST, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_GET_NAME,
+			METHOD_MAP, METHOD_FILTER, METHOD_EXISTS = null;
 
 	@BeforeClass
 	static void beforeClass() throws NoSuchMethodException, SecurityException {
@@ -47,6 +53,14 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
+		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
+		//
+		(METHOD_MAP = clz.getDeclaredMethod("map", Stream.class, Function.class)).setAccessible(true);
+		//
+		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
+		//
+		(METHOD_EXISTS = clz.getDeclaredMethod("exists", File.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -58,6 +72,12 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 			//
 			final String name = getName(method);
 			//
+			if (Boolean.logicalAnd(proxy instanceof Member, Objects.equals(name, "getName"))) {
+				//
+				return null;
+				//
+			} // if
+				//
 			if (Boolean.logicalAnd(proxy instanceof IntStream, Objects.equals(name, "max"))) {
 				//
 				return null;
@@ -83,10 +103,18 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 				//
 				return null;
 				//
-			} else if (Boolean.logicalAnd(proxy instanceof Stream, Objects.equals(name, "mapToInt"))) {
+			} else if (proxy instanceof Stream) {
 				//
-				return null;
-				//
+				if (contains(Arrays.asList("mapToInt", "map", "toList"), name)) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(name, "filter")) {
+					//
+					return proxy;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -95,8 +123,27 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 
 	}
 
-	private static String getName(final Member instance) {
-		return instance != null ? instance.getName() : null;
+	private static String getName(final Member instance) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_GET_NAME, null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private IH ih = null;
+
+	@BeforeMethod
+	void beforeMethod() {
+		//
+		ih = new IH();
+		//
 	}
 
 	@Test
@@ -210,8 +257,6 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 		//
 		Collection<Object> collection = null;
 		//
-		IH ih = null;
-		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()
@@ -265,6 +310,14 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 					//
 					add(collection, Class.class);
 					//
+				} else if (Objects.equals(parameterType, Process.class)) {
+					//
+					add(collection, Narcissus.allocateInstance(Class.forName("java.lang.ProcessImpl")));
+					//
+				} else if (Objects.equals(parameterType, InputStream.class)) {
+					//
+					add(collection, new ByteArrayInputStream(new byte[] {}));
+					//
 				} else {
 					//
 					add(collection, Narcissus.allocateInstance(parameterType));
@@ -293,8 +346,19 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 					|| Boolean.logicalAnd(Objects.equals(name, "mapToInt"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Stream.class, ToIntFunction.class }))
 					|| Boolean.logicalAnd(Objects.equals(name, "testAndApply"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Predicate.class, Object.class,
-									FailableFunction.class, FailableFunction.class }))) {
+							Arrays.equals(parameterTypes,
+									new Class<?>[] { Predicate.class, Object.class, FailableFunction.class,
+											FailableFunction.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "map"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Stream.class, Function.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "toList"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Stream.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "start"),
+							Arrays.equals(parameterTypes, new Class<?>[] { ProcessBuilder.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "getInputStream"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Process.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "getName"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Member.class }))) {
 				//
 				Assert.assertNull(result, toString);
 				//
@@ -338,6 +402,31 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 	void testTest() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assert.assertEquals(invoke(METHOD_TEST, null, Predicates.alwaysFalse(), null), Boolean.FALSE);
+		//
+	}
+
+	@Test
+	void testMap() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assert.assertNull(invoke(METHOD_MAP, null, Stream.empty(), null));
+		//
+	}
+
+	@Test
+	void testFilter() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assert.assertNull(invoke(METHOD_FILTER, null, Stream.empty(), null));
+		//
+		final Stream<?> stream = Reflection.newProxy(Stream.class, ObjectUtils.getIfNull(ih, IH::new));
+		//
+		Assert.assertSame(invoke(METHOD_FILTER, null, stream, null), stream);
+		//
+	}
+
+	@Test
+	void testExists() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assert.assertEquals(invoke(METHOD_EXISTS, null, new File("")), Boolean.FALSE);
 		//
 	}
 

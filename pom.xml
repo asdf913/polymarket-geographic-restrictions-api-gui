@@ -28,6 +28,18 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>3.2.3</version>
 		</dependency>
+		<!--https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.6.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.github.toolfactory/narcissus -->
+		<dependency>
+			<groupId>io.github.toolfactory</groupId>
+			<artifactId>narcissus</artifactId>
+			<version>1.0.13</version>
+		</dependency>
 		<!--https://mvnrepository.com/artifact/org.testng/testng-->
 		<dependency>
 			<groupId>org.testng</groupId>
@@ -35,25 +47,11 @@
 			<version>7.12.0</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.github.toolfactory/narcissus -->
-		<dependency>
-			<groupId>io.github.toolfactory</groupId>
-			<artifactId>narcissus</artifactId>
-			<version>1.0.13</version>
-			<scope>test</scope>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>33.7.2-jre</version>
-			<scope>test</scope>
-		</dependency>
-		<!--https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-collections4</artifactId>
-			<version>4.6.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
