@@ -40,7 +40,7 @@ public class PolymarketGeographicRestrictionsApiGui {
 			//
 			boolean nmcliExists = false;
 			//
-			try (final InputStream is = getInputStream(start(new ProcessBuilder(new String[] { "which", "nmcli" })))) {
+			try (final InputStream is = getInputStream(start(new ProcessBuilder("which", "nmcli")))) {
 				//
 				nmcliExists = exists(testAndApply(Objects::nonNull, StringUtils.trim(testAndApply(Objects::nonNull,
 						readAllBytes(is), x -> new String(x, StandardCharsets.UTF_8), null)), File::new, null));
@@ -50,7 +50,7 @@ public class PolymarketGeographicRestrictionsApiGui {
 			if (nmcliExists) {
 				//
 				try (final InputStream is = getInputStream(
-						start(new ProcessBuilder(new String[] { "nmcli", "-mode", "multiline", "general" })))) {
+						start(new ProcessBuilder("nmcli", "-mode", "multiline", "general")))) {
 					//
 					final Collection<String> collection = testAndApply(Objects::nonNull, is,
 							x -> IOUtils.readLines(x, charset), null);
