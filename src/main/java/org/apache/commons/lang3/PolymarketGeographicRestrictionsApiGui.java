@@ -50,18 +50,12 @@ public class PolymarketGeographicRestrictionsApiGui {
 
 	public static void main(final String[] args) throws IOException {
 		//
-		if (Objects.equals(getName(getClass(FileSystems.getDefault())), "sun.nio.fs.LinuxFileSystem")) {
+		if (Objects.equals(getName(getClass(FileSystems.getDefault())), "sun.nio.fs.LinuxFileSystem")
+				&& (libnm = ObjectUtils.getIfNull(libnm, () -> Native.load("nm", LibNM.class))) != null
+				&& libnm.nm_client_get_connectivity(libnm.nm_client_new(null, null)) != 4) {
 			//
-			if ((libnm = ObjectUtils.getIfNull(libnm, () -> Native.load("nm", LibNM.class))) != null) {
-				//
-				if (libnm.nm_client_get_connectivity(libnm.nm_client_new(null, null)) != 4) {
-					//
-					return;
-					//
-				} // if
-					//
-			} // if
-				//
+			return;
+			//
 		} // if
 			//
 		try (final InputStream is = new java.net.URL("https://polymarket.com/api/geoblock").openStream()) {
