@@ -97,7 +97,7 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 			//
 		} // if
 			//
-		boolean gui = Boolean.valueOf(get(toMap(args), "gui"));
+		boolean gui = Boolean.parseBoolean(get(toMap(args), "gui"));
 		//
 		if (!gui) {
 			//
