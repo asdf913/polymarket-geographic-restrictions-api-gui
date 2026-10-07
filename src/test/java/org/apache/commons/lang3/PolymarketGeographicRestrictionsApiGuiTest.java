@@ -1,13 +1,15 @@
 package org.apache.commons.lang3;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,12 +18,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -38,10 +46,11 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 public class PolymarketGeographicRestrictionsApiGuiTest {
 
-	private static Method METHOD_MAP_TO_INT, METHOD_TEST, METHOD_GET_CLASS, METHOD_TO_STRING = null;
+	private static Method METHOD_MAP_TO_INT, METHOD_TEST, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CAST,
+			METHOD_ENDS_WITH, METHOD_GROUP, METHOD_MATCHER, METHOD_FIND, METHOD_COLLECT, METHOD_ADD_ROW = null;
 
 	@BeforeClass
-	static void beforeClass() throws NoSuchMethodException, SecurityException {
+	static void beforeClass() throws NoSuchMethodException {
 		//
 		final Class<?> clz = PolymarketGeographicRestrictionsApiGui.class;
 		//
@@ -52,6 +61,20 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
+		//
+		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_ENDS_WITH = clz.getDeclaredMethod("endsWith", String.class, String.class)).setAccessible(true);
+		//
+		(METHOD_GROUP = clz.getDeclaredMethod("group", MatchResult.class)).setAccessible(true);
+		//
+		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
+		//
+		(METHOD_FIND = clz.getDeclaredMethod("find", Matcher.class)).setAccessible(true);
+		//
+		(METHOD_COLLECT = clz.getDeclaredMethod("collect", Stream.class, Collector.class)).setAccessible(true);
+		//
+		(METHOD_ADD_ROW = clz.getDeclaredMethod("addRow", DefaultTableModel.class, Object[].class)).setAccessible(true);
 		//
 	}
 
@@ -64,7 +87,8 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 			//
 			final String name = getName(method);
 			//
-			if (Boolean.logicalAnd(proxy instanceof Member, Objects.equals(name, "getName"))) {
+			if (Boolean.logicalAnd(proxy instanceof Member || proxy instanceof RuntimeMXBean,
+					Objects.equals(name, "getName"))) {
 				//
 				return null;
 				//
@@ -91,7 +115,12 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 				//
 				return null;
 				//
-			} else if (Boolean.logicalAnd(proxy instanceof Map, Objects.equals(name, "keySet"))) {
+			} else if (Boolean.logicalAnd(proxy instanceof Map,
+					contains(Arrays.asList("keySet", "get", "put"), name))) {
+				//
+				return null;
+				//
+			} else if (Boolean.logicalAnd(proxy instanceof MatchResult, Objects.equals(name, "group"))) {
 				//
 				return null;
 				//
@@ -121,10 +150,19 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 
 	private IH ih = null;
 
+	private Pattern pattern = null;
+
+	private PolymarketGeographicRestrictionsApiGui instance = null;
+
 	@BeforeMethod
-	void beforeMethod() {
+	void beforeMethod() throws Throwable {
 		//
 		ih = new IH();
+		//
+		pattern = Pattern.compile("\\d+");
+		//
+		instance = cast(PolymarketGeographicRestrictionsApiGui.class,
+				Narcissus.allocateInstance(PolymarketGeographicRestrictionsApiGui.class));
 		//
 	}
 
@@ -143,6 +181,8 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 		String toString = null;
 		//
 		Collection<Object> collection = null;
+		//
+		Object[] os = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -169,7 +209,17 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 					//
 			} // for
 				//
-			result = Narcissus.invokeStaticMethod(m, toArray(collection));
+			os = toArray(collection);
+			//
+			if (instance == null) {
+				//
+				instance = cast(PolymarketGeographicRestrictionsApiGui.class,
+						Narcissus.allocateInstance(PolymarketGeographicRestrictionsApiGui.class));
+				//
+			} // if
+				//
+			result = Modifier.isStatic(m.getModifiers()) ? Narcissus.invokeStaticMethod(m, os)
+					: Narcissus.invokeMethod(instance, m, os);
 			//
 			toString = toString(m);
 			//
@@ -185,6 +235,14 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 				//
 		} // for
 			//
+	}
+
+	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
+		try {
+			return (T) invoke(METHOD_CAST, null, clz, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static String toString(final Object instance) throws Throwable {
@@ -239,6 +297,8 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 		//
 		Collection<Object> collection = null;
 		//
+		Object[] os = null;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ArrayUtils.get(ms, i)) == null || m.isSynthetic()
@@ -270,13 +330,7 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 						//
 						for (int k = 0; k < IterableUtils.size(fs); k++) {
 							//
-							if ((f = IterableUtils.get(fs, k)) == null) {
-								//
-								continue;
-								//
-							} // if
-								//
-							if (Objects.equals(f.getType(), Boolean.class)) {
+							if (Objects.equals(getType(f = IterableUtils.get(fs, k)), Boolean.class)) {
 								//
 								Narcissus.setField(ih, f, Boolean.TRUE);
 								//
@@ -286,19 +340,11 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 							//
 					} // if
 						//
-					add(collection, Reflection.newProxy(parameterType, ih = ObjectUtils.getIfNull(ih, IH::new)));
+					add(collection, Reflection.newProxy(parameterType, ih));
 					//
 				} else if (Objects.equals(parameterType, Class.class)) {
 					//
 					add(collection, Class.class);
-					//
-				} else if (Objects.equals(parameterType, Process.class)) {
-					//
-					add(collection, Narcissus.allocateInstance(Class.forName("java.lang.ProcessImpl")));
-					//
-				} else if (Objects.equals(parameterType, InputStream.class)) {
-					//
-					add(collection, new ByteArrayInputStream(new byte[] {}));
 					//
 				} else {
 					//
@@ -308,7 +354,17 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 					//
 			} // for
 				//
-			result = Narcissus.invokeStaticMethod(m, toArray(collection));
+			os = toArray(collection);
+			//
+			if (instance == null) {
+				//
+				instance = cast(PolymarketGeographicRestrictionsApiGui.class,
+						Narcissus.allocateInstance(PolymarketGeographicRestrictionsApiGui.class));
+				//
+			} // if
+				//
+			result = Modifier.isStatic(m.getModifiers()) ? Narcissus.invokeStaticMethod(m, os)
+					: Narcissus.invokeMethod(instance, m, os);
 			//
 			toString = toString(m);
 			//
@@ -331,15 +387,24 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 							Arrays.equals(parameterTypes,
 									new Class<?>[] { Predicate.class, Object.class, FailableFunction.class,
 											FailableFunction.class }))
-					|| Boolean.logicalAnd(Objects.equals(name, "map"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Stream.class, Function.class }))
 					|| Boolean.logicalAnd(Objects.equals(name, "getName"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Member.class }))
+							Boolean.logicalOr(Arrays.equals(parameterTypes, new Class<?>[] { Member.class }),
+									Arrays.equals(parameterTypes, new Class<?>[] { RuntimeMXBean.class })))
 					|| Boolean.logicalAnd(Objects.equals(name, "collect"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Stream.class, Collector.class }))
 					|| Boolean.logicalAnd(Objects.equals(name, "openStream"),
 							Arrays.equals(parameterTypes, new Class<?>[] { URL.class }))
 					|| Boolean.logicalAnd(Objects.equals(name, "toMap"),
+							Arrays.equals(parameterTypes, new Class<?>[] { String.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "group"),
+							Arrays.equals(parameterTypes, new Class<?>[] { MatchResult.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "get"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Map.class, Object.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "matcher"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Pattern.class, CharSequence.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "toMap"),
+							Arrays.equals(parameterTypes, new Class<?>[] { String[].class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "toEntry"),
 							Arrays.equals(parameterTypes, new Class<?>[] { String.class }))) {
 				//
 				Assert.assertNull(result, toString);
@@ -352,6 +417,10 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 				//
 		} // for
 			//
+	}
+
+	private static Class<?> getType(final Field instance) {
+		return instance != null ? instance.getType() : null;
 	}
 
 	private static Class<?> getClass(final Object instance) throws Throwable {
@@ -384,6 +453,108 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 	void testTest() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assert.assertEquals(invoke(METHOD_TEST, null, Predicates.alwaysFalse(), null), Boolean.FALSE);
+		//
+	}
+
+	@Test
+	public void testMain() throws IOException {
+		//
+		PolymarketGeographicRestrictionsApiGui.main(new String[] { "=", "= ", " =", " = ", "== " });
+		//
+		PolymarketGeographicRestrictionsApiGui.main(new String[] { "gui=true" });
+		//
+	}
+
+	@Test
+	void testEndsWith() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assert.assertEquals(invoke(METHOD_ENDS_WITH, null, "", null), Boolean.FALSE);
+		//
+		Assert.assertEquals(invoke(METHOD_ENDS_WITH, null, "", Narcissus.allocateInstance(String.class)),
+				Boolean.FALSE);
+		//
+		Assert.assertEquals(invoke(METHOD_ENDS_WITH, null, "", ""), Boolean.TRUE);
+		//
+		Assert.assertEquals(invoke(METHOD_ENDS_WITH, null, "", "a"), Boolean.FALSE);
+		//
+	}
+
+	@Test
+	void testGroup() throws IllegalAccessException, InvocationTargetException {
+		//
+		final String string = "1";
+		//
+		final Object matcher = invoke(METHOD_MATCHER, null, pattern, string);
+		//
+		Assert.assertNull(invoke(METHOD_GROUP, null, matcher));
+		//
+		Assert.assertEquals(invoke(METHOD_FIND, null, matcher), Boolean.TRUE);
+		//
+		Assert.assertEquals(invoke(METHOD_GROUP, null, matcher), string);
+		//
+	}
+
+	@Test
+	void testMatcher() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assert.assertNull(invoke(METHOD_MATCHER, null, pattern, null));
+		//
+		Assert.assertNull(invoke(METHOD_MATCHER, null, pattern, Narcissus.allocateInstance(String.class)));
+		//
+	}
+
+	@Test
+	void testFind() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assert.assertEquals(invoke(METHOD_FIND, null, invoke(METHOD_MATCHER, null, pattern, "")), Boolean.FALSE);
+		//
+	}
+
+	@Test
+	public void testActionPerformed() throws IllegalAccessException {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		instance.actionPerformed(new ActionEvent("", 0, null));
+		//
+		// btnExecute
+		//
+		final AbstractButton btnExecute = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnExecute", btnExecute, true);
+		//
+		final DefaultTableModel dtm = new DefaultTableModel();
+		//
+		FieldUtils.writeDeclaredField(instance, "dtm", dtm, true);
+		//
+		final ActionEvent actionEvent = new ActionEvent(btnExecute, 0, null);
+		//
+		for (int i = 0; i < 2; i++) {
+			//
+			instance.actionPerformed(actionEvent);
+			//
+		} // for
+			//
+	}
+
+	@Test
+	void testCollect() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assert.assertNull(invoke(METHOD_COLLECT, null, Stream.empty(), null));
+		//
+		Assert.assertNull(invoke(METHOD_COLLECT, null,
+				Reflection.newProxy(Stream.class, ObjectUtils.getIfNull(ih, IH::new)), null));
+		//
+	}
+
+	@Test
+	void testAddRow() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assert.assertNull(invoke(METHOD_ADD_ROW, null, new DefaultTableModel(), null));
 		//
 	}
 
