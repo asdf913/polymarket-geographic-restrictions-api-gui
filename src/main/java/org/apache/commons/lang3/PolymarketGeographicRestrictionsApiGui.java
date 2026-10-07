@@ -17,6 +17,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Proxy;
 import java.nio.file.FileSystems;
 import java.util.Collection;
+import java.util.EventObject;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -393,7 +394,7 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		if (Objects.equals(evt != null ? evt.getSource() : null, btnExecute)) {
+		if (Objects.equals(getSource(evt), btnExecute)) {
 			//
 			try {
 				//
@@ -427,6 +428,10 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 		} // if
 			//
+	}
+
+	private static Object getSource(final EventObject instance) {
+		return instance != null ? instance.getSource() : null;
 	}
 
 	private static void addRow(final DefaultTableModel instance, final Object[] rowData) {

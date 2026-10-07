@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.EventObject;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -405,7 +406,9 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 					|| Boolean.logicalAnd(Objects.equals(name, "toMap"),
 							Arrays.equals(parameterTypes, new Class<?>[] { String[].class }))
 					|| Boolean.logicalAnd(Objects.equals(name, "toEntry"),
-							Arrays.equals(parameterTypes, new Class<?>[] { String.class }))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { String.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "getSource"),
+							Arrays.equals(parameterTypes, new Class<?>[] { EventObject.class }))) {
 				//
 				Assert.assertNull(result, toString);
 				//
