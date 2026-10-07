@@ -174,7 +174,7 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 			if (Boolean.logicalAnd(Objects.equals(getName(m), "main"),
 					Arrays.equals(parameterTypes, new Class<?>[] { String[].class })) && runningInGitHubActions) {
 				//
-				continue;
+//				continue;
 				//
 			} // if
 				//
