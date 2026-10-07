@@ -61,6 +61,8 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 
 	private static final long serialVersionUID = 6305772484741534948L;
 
+	private static final String VALUE = "value";
+
 	private interface LibNM extends Library {
 
 		Pointer nm_client_new(final Pointer cancellable, final Pointer error);
@@ -133,11 +135,11 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 			//
 			instance.btnExecute.addActionListener(instance);
 			//
-			final JTable jTable = new JTable(instance.dtm = new DefaultTableModel(new Object[] { "Key", "Value" }, 0));
+			final JTable jTable = new JTable(instance.dtm = new DefaultTableModel(new Object[] { "Key", VALUE }, 0));
 			//
 			jTable.getColumn("Key").setMaxWidth(46);
 			//
-			jTable.getColumn("Value").setMaxWidth(96);
+			jTable.getColumn(VALUE).setMaxWidth(96);
 			//
 			instance.add(new JScrollPane(jTable), "wmax 145,hmax 88");
 			//
@@ -195,7 +197,7 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 		final Field field = testAndApply(x -> IterableUtils.size(x) == 1,
 				collect(filter(
 						stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
-						x -> Objects.equals(getName(x), "value")), Collectors.toList()),
+						x -> Objects.equals(getName(x), VALUE)), Collectors.toList()),
 				x -> IterableUtils.get(x, 0), null);
 		//
 		return (field == null || Boolean.logicalAnd(Narcissus.getField(instance, field) != null,
@@ -248,7 +250,7 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 		final Field value = testAndApply(x -> IterableUtils.size(x) == 1,
 				collect(filter(
 						stream(testAndApply(Objects::nonNull, getClass(input), FieldUtils::getAllFieldsList, null)),
-						x -> Objects.equals(getName(x), "value")), Collectors.toList()),
+						x -> Objects.equals(getName(x), VALUE)), Collectors.toList()),
 				x -> IterableUtils.get(x, 0), null);
 		//
 		return (normalizedPattern == null || Narcissus.getField(instance, normalizedPattern) != null)
@@ -279,7 +281,7 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 		final Field field = testAndApply(x -> IterableUtils.size(x) == 1,
 				collect(filter(
 						stream(testAndApply(Objects::nonNull, getClass(url), FieldUtils::getAllFieldsList, null)),
-						f -> Objects.equals(getName(f), "value")), Collectors.toList()),
+						f -> Objects.equals(getName(f), VALUE)), Collectors.toList()),
 				x -> IterableUtils.get(x, 0), null);
 		//
 		if (field != null && Narcissus.getField(url, field) == null) {
@@ -348,7 +350,7 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 		final Field field = testAndApply(x -> IterableUtils.size(x) == 1,
 				collect(filter(
 						stream(testAndApply(Objects::nonNull, getClass(string), FieldUtils::getAllFieldsList, null)),
-						f -> Objects.equals(getName(f), "value")), Collectors.toList()),
+						f -> Objects.equals(getName(f), VALUE)), Collectors.toList()),
 				x -> IterableUtils.get(x, 0), null);
 		//
 		if (string != null && field != null && Narcissus.getField(string, field) == null) {
