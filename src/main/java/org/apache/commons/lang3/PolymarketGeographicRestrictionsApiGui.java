@@ -7,6 +7,8 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.lang.reflect.Proxy;
 import java.nio.file.FileSystems;
 import java.util.Collection;
@@ -17,15 +19,20 @@ import java.util.OptionalInt;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 
+import io.github.toolfactory.narcissus.Narcissus;
 import tools.jackson.databind.ObjectMapper;
 
 public class PolymarketGeographicRestrictionsApiGui {
@@ -60,27 +67,75 @@ public class PolymarketGeographicRestrictionsApiGui {
 			//
 		} // if
 			//
-		try (final InputStream is = new java.net.URL("https://polymarket.com/api/geoblock").openStream()) {
+		final Map<?, ?> map = toMap("https://polymarket.com/api/geoblock");
+		//
+		final int maxKeyLength = orElse(max(mapToInt(stream(keySet(map)), x -> StringUtils.length(toString(x)))), 0);
+		//
+		if (map != null && map.entrySet() != null) {
 			//
-			final Map<?, ?> map = cast(Map.class,
+			for (final Entry<?, ?> entry : map.entrySet()) {
+				//
+				System.out.println(StringUtils.rightPad(toString(getKey(entry)), maxKeyLength) + " " + getValue(entry));
+				//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static Map<?, ?> toMap(final String url) throws IOException {
+		//
+		final Field field = testAndApply(x -> IterableUtils.size(x) == 1,
+				collect(filter(
+						stream(testAndApply(Objects::nonNull, getClass(url), FieldUtils::getAllFieldsList, null)),
+						f -> Objects.equals(getName(f), "value")), Collectors.toList()),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		if (field != null && Narcissus.getField(url, field) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try (final InputStream is = openStream(testAndApply(Objects::nonNull, url, java.net.URL::new, null))) {
+			//
+			return cast(Map.class,
 					testAndApply(Objects::nonNull, is, x -> new ObjectMapper().readValue(x, Object.class), null));
 			//
-			final int maxKeyLength = orElse(max(mapToInt(stream(keySet(map)), x -> StringUtils.length(toString(x)))),
-					0);
-			//
-			if (map != null && map.entrySet() != null) {
-				//
-				for (final Entry<?, ?> entry : map.entrySet()) {
-					//
-					System.out.println(
-							StringUtils.rightPad(toString(getKey(entry)), maxKeyLength) + " " + getValue(entry));
-					//
-				} // for
-					//
-			} // if
-				//
 		} // try
 			//
+	}
+
+	private static InputStream openStream(final java.net.URL instance) throws IOException {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Field field = testAndApply(x -> IterableUtils.size(x) == 1,
+				collect(filter(
+						stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
+						f -> Objects.equals(getName(f), "handler")), Collectors.toList()),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		return (field == null || Narcissus.getField(instance, field) != null) ? instance.openStream() : null;
+		//
+	}
+
+	private static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector) {
+		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
+				? instance.collect(collector)
+				: null;
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+		return instance != null ? instance.filter(predicate) : instance;
+	}
+
+	private static String getName(final Member instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 	private static String getName(final Class<?> instance) {

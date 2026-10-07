@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,6 +19,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
+import java.util.stream.Collector;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -95,7 +97,7 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 				//
 			} else if (proxy instanceof Stream) {
 				//
-				if (contains(Arrays.asList("mapToInt", "map", "toList"), name)) {
+				if (contains(Arrays.asList("mapToInt", "collect"), name)) {
 					//
 					return null;
 					//
@@ -331,14 +333,14 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 											FailableFunction.class }))
 					|| Boolean.logicalAnd(Objects.equals(name, "map"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Stream.class, Function.class }))
-					|| Boolean.logicalAnd(Objects.equals(name, "toList"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Stream.class }))
-					|| Boolean.logicalAnd(Objects.equals(name, "start"),
-							Arrays.equals(parameterTypes, new Class<?>[] { ProcessBuilder.class }))
-					|| Boolean.logicalAnd(Objects.equals(name, "getInputStream"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Process.class }))
 					|| Boolean.logicalAnd(Objects.equals(name, "getName"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Member.class }))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { Member.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "collect"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Stream.class, Collector.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "openStream"),
+							Arrays.equals(parameterTypes, new Class<?>[] { URL.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "toMap"),
+							Arrays.equals(parameterTypes, new Class<?>[] { String.class }))) {
 				//
 				Assert.assertNull(result, toString);
 				//
