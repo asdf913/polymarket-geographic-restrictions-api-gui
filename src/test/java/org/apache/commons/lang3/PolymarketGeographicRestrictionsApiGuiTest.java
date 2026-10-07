@@ -119,14 +119,10 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 
 	private IH ih = null;
 
-	private boolean runningInGitHubActions = false;
-
 	@BeforeMethod
 	void beforeMethod() {
 		//
 		ih = new IH();
-		//
-		runningInGitHubActions = Objects.equals(System.getenv("GITHUB_ACTIONS"), "true");
 		//
 	}
 
@@ -170,13 +166,6 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 				} // if
 					//
 			} // for
-				//
-			if (Boolean.logicalAnd(Objects.equals(getName(m), "main"),
-					Arrays.equals(parameterTypes, new Class<?>[] { String[].class })) && runningInGitHubActions) {
-				//
-//				continue;
-				//
-			} // if
 				//
 			result = Narcissus.invokeStaticMethod(m, toArray(collection));
 			//
@@ -316,13 +305,6 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 				} // if
 					//
 			} // for
-				//
-			if (Boolean.logicalAnd(Objects.equals(getName(m), "main"),
-					Arrays.equals(parameterTypes, new Class<?>[] { String[].class })) && runningInGitHubActions) {
-				//
-				continue;
-				//
-			} // if
 				//
 			result = Narcissus.invokeStaticMethod(m, toArray(collection));
 			//

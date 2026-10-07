@@ -1,5 +1,6 @@
 package org.apache.commons.lang3;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
@@ -51,6 +52,7 @@ public class PolymarketGeographicRestrictionsApiGui {
 	public static void main(final String[] args) throws IOException {
 		//
 		if (Objects.equals(getName(getClass(FileSystems.getDefault())), "sun.nio.fs.LinuxFileSystem")
+				&& new File("/usr/bin/nmcli").isFile()
 				&& (libnm = ObjectUtils.getIfNull(libnm, () -> Native.load("nm", LibNM.class))) != null
 				&& libnm.nm_client_get_connectivity(libnm.nm_client_new(null, null)) != 4) {
 			//
