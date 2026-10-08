@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -492,9 +493,8 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 			remove(map, null);
 			//
-			final Clipboard clipboard = Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
-					? getSystemClipboard(Toolkit.getDefaultToolkit())
-					: null;
+			final Clipboard clipboard = testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+					() -> getSystemClipboard(Toolkit.getDefaultToolkit()));
 			//
 			if (clipboard != null) {
 				//
@@ -504,6 +504,10 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 		} // if
 			//
+	}
+
+	private static <T> T testAndGet(final boolean condition, final Supplier<T> instance) {
+		return condition && instance != null ? instance.get() : null;
 	}
 
 	private static Clipboard getSystemClipboard(final Toolkit instance) {

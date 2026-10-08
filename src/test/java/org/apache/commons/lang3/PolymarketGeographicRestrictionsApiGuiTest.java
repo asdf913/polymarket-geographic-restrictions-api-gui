@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -43,6 +44,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicates;
+import com.google.common.base.Suppliers;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -50,7 +52,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 public class PolymarketGeographicRestrictionsApiGuiTest {
 
 	private static Method METHOD_MAP_TO_INT, METHOD_TEST, METHOD_GET_CLASS, METHOD_TO_STRING, METHOD_CAST,
-			METHOD_ENDS_WITH, METHOD_GROUP, METHOD_MATCHER, METHOD_FIND, METHOD_COLLECT, METHOD_ADD_ROW = null;
+			METHOD_ENDS_WITH, METHOD_GROUP, METHOD_MATCHER, METHOD_FIND, METHOD_COLLECT, METHOD_ADD_ROW,
+			METHOD_TEST_AND_GET = null;
 
 	@BeforeClass
 	static void beforeClass() throws NoSuchMethodException {
@@ -78,6 +81,8 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 		(METHOD_COLLECT = clz.getDeclaredMethod("collect", Stream.class, Collector.class)).setAccessible(true);
 		//
 		(METHOD_ADD_ROW = clz.getDeclaredMethod("addRow", DefaultTableModel.class, Object[].class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_GET = clz.getDeclaredMethod("testAndGet", Boolean.TYPE, Supplier.class)).setAccessible(true);
 		//
 	}
 
@@ -199,6 +204,8 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 		//
 		Class<?>[] parameterTypes = null;
 		//
+		Class<?> parameterType = null;
+		//
 		Object result = null;
 		//
 		String toString = null;
@@ -220,9 +227,13 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 			//
 			for (int j = 0; j < parameterTypes.length; j++) {
 				//
-				if (Objects.equals(ArrayUtils.get(parameterTypes, j), Integer.TYPE)) {
+				if (Objects.equals(parameterType = ArrayUtils.get(parameterTypes, j), Integer.TYPE)) {
 					//
 					add(collection, Integer.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Boolean.TYPE)) {
+					//
+					add(collection, Boolean.FALSE);
 					//
 				} else {
 					//
@@ -339,6 +350,10 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 					//
 					add(collection, Integer.valueOf(0));
 					//
+				} else if (Objects.equals(parameterType, Boolean.TYPE)) {
+					//
+					add(collection, Boolean.FALSE);
+					//
 				} else if (parameterType != null && parameterType.isArray()) {
 					//
 					add(collection, Array.newInstance(parameterType.getComponentType(), 0));
@@ -448,7 +463,9 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 					|| Boolean.logicalAnd(Objects.equals(name, "getMessage"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Throwable.class }))
 					|| Boolean.logicalAnd(Objects.equals(name, "getSystemClipboard"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Toolkit.class }))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { Toolkit.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "testAndGet"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Boolean.TYPE, Supplier.class }))) {
 				//
 				Assert.assertNull(result, toString);
 				//
@@ -606,6 +623,15 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 	void testAddRow() throws IllegalAccessException, InvocationTargetException {
 		//
 		Assert.assertNull(invoke(METHOD_ADD_ROW, null, new DefaultTableModel(), null));
+		//
+	}
+
+	@Test
+	void testTestAndGet() throws IllegalAccessException, InvocationTargetException {
+		//
+		Assert.assertNull(invoke(METHOD_TEST_AND_GET, null, Boolean.TRUE, null));
+		//
+		Assert.assertNull(invoke(METHOD_TEST_AND_GET, null, Boolean.TRUE, Suppliers.ofInstance(null)));
 		//
 	}
 
