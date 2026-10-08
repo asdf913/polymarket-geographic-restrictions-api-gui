@@ -89,6 +89,12 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			if (Objects.equals(method != null ? method.getReturnType() : null, Void.TYPE)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String name = getName(method);
 			//
 			if (Boolean.logicalAnd(proxy instanceof Member || proxy instanceof RuntimeMXBean,

@@ -50,6 +50,8 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
@@ -63,6 +65,8 @@ import tools.jackson.databind.ObjectMapper;
 public class PolymarketGeographicRestrictionsApiGui extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 6305772484741534948L;
+
+	private static final Logger LOG = LoggerFactory.getLogger(PolymarketGeographicRestrictionsApiGui.class);
 
 	private static final String VALUE = "value";
 
@@ -145,12 +149,18 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 			//
 			for (final Entry<?, ?> entry : map.entrySet()) {
 				//
-				System.out.println(StringUtils.rightPad(toString(getKey(entry)), maxKeyLength) + " " + getValue(entry));
+				info(LOG, "{} {}", StringUtils.rightPad(toString(getKey(entry)), maxKeyLength), getValue(entry));
 				//
 			} // for
 				//
 		} // if
 			//
+	}
+
+	private static void info(final Logger instance, final String format, final Object... args) {
+		if (instance != null) {
+			instance.info(format, args);
+		}
 	}
 
 	private static void setMaxWidth(final TableColumn instance, final int maxWidth) {

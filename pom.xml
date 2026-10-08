@@ -53,6 +53,12 @@
 			<artifactId>miglayout-swing</artifactId>
 			<version>11.5.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.logevents/logevents -->
+		<dependency>
+			<groupId>org.logevents</groupId>
+			<artifactId>logevents</artifactId>
+			<version>0.5.9</version>
+		</dependency>
 		<!--https://mvnrepository.com/artifact/org.testng/testng-->
 		<dependency>
 			<groupId>org.testng</groupId>
