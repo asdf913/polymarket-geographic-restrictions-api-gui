@@ -29,6 +29,7 @@ import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.regex.MatchResult;
@@ -468,14 +469,10 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 			//
 			try {
 				//
+				forEach(IntStream.iterate(getRowCount(dtm) - 1, i -> i >= 0, i -> i - 1), i -> removeRow(dtm, i));
+				//
 				final Map<?, ?> map = toMap("https://polymarket.com/api/geoblock");
 				//
-				for (int i = getRowCount(dtm) - 1; dtm != null && i >= 0; i--) {
-					//
-					removeRow(dtm, i);
-					//
-				} // for
-					//
 				if (map != null && map.entrySet() != null) {
 					//
 					for (final Entry<?, ?> entry : map.entrySet()) {
@@ -525,6 +522,12 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 		} // if
 			//
+	}
+
+	private static void forEach(final IntStream instance, final IntConsumer action) {
+		if (instance != null) {
+			instance.forEach(action);
+		}
 	}
 
 	private static void error(final Logger instance, final String message, final Throwable throwable) {
