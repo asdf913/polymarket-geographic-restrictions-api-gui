@@ -168,16 +168,9 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 		//
 		final int maxKeyLength = orElse(max(mapToInt(stream(keySet(map)), x -> StringUtils.length(toString(x)))), 0);
 		//
-		if (map != null && map.entrySet() != null) {
-			//
-			for (final Entry<?, ?> entry : map.entrySet()) {
-				//
-				info(LOG, "{} {}", StringUtils.rightPad(toString(getKey(entry)), maxKeyLength), getValue(entry));
-				//
-			} // for
-				//
-		} // if
-			//
+		forEach(map != null ? map.entrySet() : null,
+				x -> info(LOG, "{} {}", StringUtils.rightPad(toString(getKey(x)), maxKeyLength), getValue(x)));
+		//
 	}
 
 	private static <T> void forEach(final Iterable<T> instance, final Consumer<T> consumer) {
