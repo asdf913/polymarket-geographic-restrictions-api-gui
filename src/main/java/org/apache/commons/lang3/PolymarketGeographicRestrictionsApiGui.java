@@ -492,7 +492,7 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 			remove(map, null);
 			//
-			final Clipboard clipboard = !GraphicsEnvironment.isHeadless() && !isTestMode()
+			final Clipboard clipboard = Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
 					? getSystemClipboard(Toolkit.getDefaultToolkit())
 					: null;
 			//
