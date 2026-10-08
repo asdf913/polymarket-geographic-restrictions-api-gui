@@ -42,6 +42,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -111,9 +112,9 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 			//
 			final JTable jTable = new JTable(instance.dtm = new DefaultTableModel(new Object[] { "Key", VALUE }, 0));
 			//
-			jTable.getColumn("Key").setMaxWidth(46);
+			setMaxWidth(jTable.getColumn("Key"), 46);
 			//
-			jTable.getColumn(VALUE).setMaxWidth(96);
+			setMaxWidth(jTable.getColumn(VALUE), 96);
 			//
 			instance.add(new JScrollPane(jTable), "wmax 145,hmax 88");
 			//
@@ -150,6 +151,12 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 		} // if
 			//
+	}
+
+	private static void setMaxWidth(final TableColumn instance, final int maxWidth) {
+		if (instance != null) {
+			instance.setMaxWidth(maxWidth);
+		}
 	}
 
 	private static boolean isGui() {
