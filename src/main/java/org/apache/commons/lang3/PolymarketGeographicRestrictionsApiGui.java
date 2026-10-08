@@ -99,35 +99,7 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 			//
 		} // if
 			//
-		boolean gui = Boolean.parseBoolean(get(toMap(args), "gui"));
-		//
-		if (!gui) {
-			//
-			final String name = getName(getClass(FileSystems.getDefault()));
-			//
-			if (Objects.equals(name, "sun.nio.fs.MacOSXFileSystem")) {
-				//
-				gui = System.console() == null;
-				//
-			} // if
-				//
-			if (Boolean.logicalAnd(!gui, Objects.equals(name, "sun.nio.fs.WindowsFileSystem"))) {
-				//
-				final Matcher matcher = matcher(Pattern.compile("\\d+"), getName(ManagementFactory.getRuntimeMXBean()));
-				//
-				if (find(matcher)) {
-					//
-					gui = BooleanUtils.toBooleanDefaultIfNull(testAndApply(NumberUtils::isDigits, group(matcher),
-							x -> endsWith(Kernel32Util.QueryFullProcessImageName(NumberUtils.toInt(x), 0), "javaw.exe"),
-							null), false);
-					//
-				} // if
-					//
-			} // if
-				//
-		} // if
-			//
-		if (gui) {
+		if (Boolean.parseBoolean(get(toMap(args), "gui")) || isGui()) {
 			//
 			final PolymarketGeographicRestrictionsApiGui instance = new PolymarketGeographicRestrictionsApiGui();
 			//
@@ -178,6 +150,34 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 		} // if
 			//
+	}
+
+	private static boolean isGui() {
+		//
+		final String name = getName(getClass(FileSystems.getDefault()));
+		//
+		if (Objects.equals(name, "sun.nio.fs.MacOSXFileSystem")) {
+			//
+			return System.console() == null;
+			//
+		} // if
+			//
+		if (Objects.equals(name, "sun.nio.fs.WindowsFileSystem")) {
+			//
+			final Matcher matcher = matcher(Pattern.compile("\\d+"), getName(ManagementFactory.getRuntimeMXBean()));
+			//
+			if (find(matcher)) {
+				//
+				return BooleanUtils.toBooleanDefaultIfNull(testAndApply(NumberUtils::isDigits, group(matcher),
+						x -> endsWith(Kernel32Util.QueryFullProcessImageName(NumberUtils.toInt(x), 0), "javaw.exe"),
+						null), false);
+				//
+			} // if
+				//
+		} // if
+			//
+		return false;
+		//
 	}
 
 	private static boolean isTestMode() {
