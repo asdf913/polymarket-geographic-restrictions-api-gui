@@ -431,7 +431,9 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 					|| Boolean.logicalAnd(Objects.equals(name, "toEntry"),
 							Arrays.equals(parameterTypes, new Class<?>[] { String.class }))
 					|| Boolean.logicalAnd(Objects.equals(name, "getSource"),
-							Arrays.equals(parameterTypes, new Class<?>[] { EventObject.class }))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { EventObject.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "getMessage"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Throwable.class }))) {
 				//
 				Assert.assertNull(result, toString);
 				//

@@ -473,7 +473,7 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 			} catch (final IOException e) {
 				//
-				error(LOG, e != null ? e.getMessage() : null, e);
+				error(LOG, getMessage(e), e);
 				//
 			} // try
 				//
@@ -510,6 +510,10 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 		} // if
 			//
+	}
+
+	private static String getMessage(final Throwable instance) {
+		return instance != null ? instance.getMessage() : null;
 	}
 
 	private static void forEach(final IntStream instance, final IntConsumer action) {
