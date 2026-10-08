@@ -492,10 +492,8 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 			remove(map, null);
 			//
-			final Toolkit toolKit = Toolkit.getDefaultToolkit();
-			//
-			final Clipboard clipboard = toolKit != null && !GraphicsEnvironment.isHeadless() && !isTestMode()
-					? toolKit.getSystemClipboard()
+			final Clipboard clipboard = !GraphicsEnvironment.isHeadless() && !isTestMode()
+					? getSystemClipboard(Toolkit.getDefaultToolkit())
 					: null;
 			//
 			if (clipboard != null) {
@@ -506,6 +504,14 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 		} // if
 			//
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) {
+		//
+		return instance != null && !Objects.equals(getName(getClass(instance)), "sun.awt.HeadlessToolkit")
+				? instance.getSystemClipboard()
+				: null;
+		//
 	}
 
 	private static void remove(final Map<?, ?> instance, final Object key) {

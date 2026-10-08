@@ -1,5 +1,6 @@
 package org.apache.commons.lang3;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.lang.management.RuntimeMXBean;
@@ -378,6 +379,10 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 					//
 					add(collection, Narcissus.allocateInstance(JButton.class));
 					//
+				} else if (Objects.equals(parameterType, Toolkit.class)) {
+					//
+					add(collection, Narcissus.allocateInstance(getClass(Toolkit.getDefaultToolkit())));
+					//
 				} else {
 					//
 					add(collection, Narcissus.allocateInstance(parameterType));
@@ -441,7 +446,9 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 					|| Boolean.logicalAnd(Objects.equals(name, "getSource"),
 							Arrays.equals(parameterTypes, new Class<?>[] { EventObject.class }))
 					|| Boolean.logicalAnd(Objects.equals(name, "getMessage"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Throwable.class }))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { Throwable.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "getSystemClipboard"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Toolkit.class }))) {
 				//
 				Assert.assertNull(result, toString);
 				//
