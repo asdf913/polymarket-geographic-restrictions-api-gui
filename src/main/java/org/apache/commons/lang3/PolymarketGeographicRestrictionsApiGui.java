@@ -95,12 +95,13 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 
 	public static void main(final String[] args) throws IOException {
 		//
+		boolean connectivity = false;
+		//
 		if (Objects.equals(getName(getClass(FileSystems.getDefault())), "sun.nio.fs.LinuxFileSystem")
 				&& new File("/usr/bin/nmcli").isFile()
-				&& (libnm = ObjectUtils.getIfNull(libnm, () -> Native.load("nm", LibNM.class))) != null
-				&& libnm.nm_client_get_connectivity(libnm.nm_client_new(null, null)) != 4) {
+				&& (libnm = ObjectUtils.getIfNull(libnm, () -> Native.load("nm", LibNM.class))) != null) {
 			//
-			return;
+			connectivity = (libnm.nm_client_get_connectivity(libnm.nm_client_new(null, null)) == 4);
 			//
 		} // if
 			//
@@ -137,6 +138,18 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 			} // if
 				//
+			if (connectivity) {
+				//
+				instance.actionPerformed(new ActionEvent(instance.btnExecute, 0, null));
+				//
+			} // if
+				//
+			return;
+			//
+		} // if
+			//
+		if (!connectivity) {
+			//
 			return;
 			//
 		} // if
