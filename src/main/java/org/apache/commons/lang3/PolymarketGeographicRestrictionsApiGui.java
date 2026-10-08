@@ -466,16 +466,8 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 				final Map<?, ?> map = toMap("https://polymarket.com/api/geoblock");
 				//
-				if (map != null && map.entrySet() != null) {
-					//
-					for (final Entry<?, ?> entry : map.entrySet()) {
-						//
-						addRow(dtm, new Object[] { getKey(entry), getValue(entry) });
-						//
-					} // for
-						//
-				} // if
-					//
+				forEach(map != null ? map.entrySet() : null, x -> addRow(dtm, new Object[] { getKey(x), getValue(x) }));
+				//
 			} catch (final IOException e) {
 				//
 				error(LOG, e != null ? e.getMessage() : null, e);
