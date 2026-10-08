@@ -41,7 +41,6 @@ import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
