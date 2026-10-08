@@ -126,7 +126,7 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 				return null;
 				//
 			} else if (Boolean.logicalAnd(proxy instanceof Map,
-					contains(Arrays.asList("keySet", "get", "put"), name))) {
+					contains(Arrays.asList("keySet", "get", "put", "entrySet"), name))) {
 				//
 				return null;
 				//
@@ -403,7 +403,7 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 							Arrays.equals(parameterTypes, new Class<?>[] { FailableFunction.class, Object.class }))
 					|| Boolean.logicalAnd(Objects.equals(name, "stream"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Collection.class }))
-					|| Boolean.logicalAnd(Objects.equals(name, "keySet"),
+					|| Boolean.logicalAnd(contains(Arrays.asList("keySet", "entrySet"), name),
 							Arrays.equals(parameterTypes, new Class<?>[] { Map.class }))
 					|| Boolean.logicalAnd(Objects.equals(name, "mapToInt"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Stream.class, ToIntFunction.class }))

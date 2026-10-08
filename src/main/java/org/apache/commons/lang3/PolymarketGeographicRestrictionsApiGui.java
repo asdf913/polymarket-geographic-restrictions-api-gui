@@ -168,9 +168,13 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 		//
 		final int maxKeyLength = orElse(max(mapToInt(stream(keySet(map)), x -> StringUtils.length(toString(x)))), 0);
 		//
-		forEach(map != null ? map.entrySet() : null,
+		forEach(entrySet(map),
 				x -> info(LOG, "{} {}", StringUtils.rightPad(toString(getKey(x)), maxKeyLength), getValue(x)));
 		//
+	}
+
+	private static <K, V> Collection<Entry<K, V>> entrySet(final Map<K, V> instance) {
+		return instance != null ? instance.entrySet() : null;
 	}
 
 	private static <T> void forEach(final Iterable<T> instance, final Consumer<T> consumer) {
@@ -464,9 +468,8 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 				forEach(IntStream.iterate(getRowCount(dtm) - 1, i -> i >= 0, i -> i - 1), i -> removeRow(dtm, i));
 				//
-				final Map<?, ?> map = toMap("https://polymarket.com/api/geoblock");
-				//
-				forEach(map != null ? map.entrySet() : null, x -> addRow(dtm, new Object[] { getKey(x), getValue(x) }));
+				forEach(entrySet(toMap("https://polymarket.com/api/geoblock")),
+						x -> addRow(dtm, new Object[] { getKey(x), getValue(x) }));
 				//
 			} catch (final IOException e) {
 				//
