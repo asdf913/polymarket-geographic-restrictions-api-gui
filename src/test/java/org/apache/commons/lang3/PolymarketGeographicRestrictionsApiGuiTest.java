@@ -350,7 +350,7 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 								//
 								Narcissus.setField(ih, f, Boolean.TRUE);
 								//
-							} else if (Objects.equals(type = getType(f = IterableUtils.get(fs, k)), Integer.class)) {
+							} else if (Objects.equals(type, Integer.class)) {
 								//
 								Narcissus.setField(ih, f, Integer.valueOf(0));
 								//
