@@ -42,6 +42,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -400,9 +401,9 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 				final Map<?, ?> map = toMap("https://polymarket.com/api/geoblock");
 				//
-				for (int i = (dtm != null ? dtm.getRowCount() : 0) - 1; dtm != null && i >= 0; i--) {
+				for (int i = getRowCount(dtm) - 1; dtm != null && i >= 0; i--) {
 					//
-					dtm.removeRow(i);
+					removeRow(dtm, i);
 					//
 				} // for
 					//
@@ -428,6 +429,32 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 		} // if
 			//
+	}
+
+	private static void removeRow(final DefaultTableModel instance, final int row) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Field field = testAndApply(x -> IterableUtils.size(x) == 1,
+				collect(filter(
+						stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
+						x -> Objects.equals(getName(x), "dataVector")), Collectors.toList()),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		if (field == null || Narcissus.getField(instance, field) != null) {
+			//
+			instance.removeRow(row);
+			//
+		} // if
+			//
+	}
+
+	private static int getRowCount(final TableModel instance) {
+		return instance != null ? instance.getRowCount() : 0;
 	}
 
 	private static Object getSource(final EventObject instance) {

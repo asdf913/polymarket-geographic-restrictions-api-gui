@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -83,6 +84,8 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 
 		private Boolean test;
 
+		private Integer rowCount;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -124,6 +127,10 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 			} else if (Boolean.logicalAnd(proxy instanceof MatchResult, Objects.equals(name, "group"))) {
 				//
 				return null;
+				//
+			} else if (Boolean.logicalAnd(proxy instanceof TableModel, Objects.equals(name, "getRowCount"))) {
+				//
+				return rowCount;
 				//
 			} else if (proxy instanceof Stream) {
 				//
@@ -329,11 +336,17 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 						//
 						Field f = null;
 						//
+						Class<?> type = null;
+						//
 						for (int k = 0; k < IterableUtils.size(fs); k++) {
 							//
-							if (Objects.equals(getType(f = IterableUtils.get(fs, k)), Boolean.class)) {
+							if (Objects.equals(type = getType(f = IterableUtils.get(fs, k)), Boolean.class)) {
 								//
 								Narcissus.setField(ih, f, Boolean.TRUE);
+								//
+							} else if (Objects.equals(type = getType(f = IterableUtils.get(fs, k)), Integer.class)) {
+								//
+								Narcissus.setField(ih, f, Integer.valueOf(0));
 								//
 							} // if
 								//
