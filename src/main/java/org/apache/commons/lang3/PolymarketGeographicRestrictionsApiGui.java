@@ -481,7 +481,7 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 			//
 			Map<Object, Object> map = null;
 			//
-			final int columnCount = dtm != null ? dtm.getColumnCount() : 0;
+			final int columnCount = getColumnCount(dtm);
 			//
 			for (int i = 0; dtm != null && i < getRowCount(dtm); i++) {
 				//
@@ -510,6 +510,10 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 		} // if
 			//
+	}
+
+	private static int getColumnCount(final TableModel instance) {
+		return instance != null ? instance.getColumnCount() : 0;
 	}
 
 	private static String getMessage(final Throwable instance) {

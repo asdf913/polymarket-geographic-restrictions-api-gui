@@ -84,7 +84,7 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 
 		private Boolean test;
 
-		private Integer rowCount;
+		private Integer rowCount, columnCount;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -134,10 +134,18 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 				//
 				return null;
 				//
-			} else if (Boolean.logicalAnd(proxy instanceof TableModel, Objects.equals(name, "getRowCount"))) {
+			} else if (proxy instanceof TableModel) {
 				//
-				return rowCount;
-				//
+				if (Objects.equals(name, "getRowCount")) {
+					//
+					return rowCount;
+					//
+				} else if (Objects.equals(name, "getColumnCount")) {
+					//
+					return columnCount;
+					//
+				} // if
+					//
 			} else if (proxy instanceof Stream) {
 				//
 				if (contains(Arrays.asList("mapToInt", "collect"), name)) {
