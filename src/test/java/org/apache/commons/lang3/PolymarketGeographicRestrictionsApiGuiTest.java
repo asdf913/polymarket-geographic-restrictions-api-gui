@@ -126,7 +126,7 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 				return null;
 				//
 			} else if (Boolean.logicalAnd(proxy instanceof Map,
-					contains(Arrays.asList("keySet", "get", "put", "entrySet"), name))) {
+					contains(Arrays.asList("keySet", "get", "put", "entrySet", "remove"), name))) {
 				//
 				return null;
 				//

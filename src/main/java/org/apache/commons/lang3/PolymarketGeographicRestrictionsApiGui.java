@@ -490,12 +490,8 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 			} // for
 				//
-			if (map != null) {
-				//
-				map.remove(null);
-				//
-			} // if
-				//
+			remove(map, null);
+			//
 			final Toolkit toolKit = Toolkit.getDefaultToolkit();
 			//
 			final Clipboard clipboard = toolKit != null && !GraphicsEnvironment.isHeadless() && !isTestMode()
@@ -510,6 +506,12 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 		} // if
 			//
+	}
+
+	private static void remove(final Map<?, ?> instance, final Object key) {
+		if (instance != null) {
+			instance.remove(key);
+		}
 	}
 
 	private static int getColumnCount(final TableModel instance) {
