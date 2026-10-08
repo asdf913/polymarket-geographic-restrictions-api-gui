@@ -1,6 +1,9 @@
 package org.apache.commons.lang3;
 
 import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -16,6 +19,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Proxy;
 import java.nio.file.FileSystems;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.EventObject;
 import java.util.LinkedHashMap;
@@ -24,6 +28,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.regex.MatchResult;
@@ -36,6 +41,7 @@ import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -89,7 +95,7 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 
 	private static LibNM libnm = null;
 
-	private AbstractButton btnExecute = null;
+	private AbstractButton btnExecute, btnCopy = null;
 
 	private DefaultTableModel dtm = null;
 
@@ -111,9 +117,9 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 			//
 			instance.setLayout(new MigLayout());
 			//
-			instance.add(instance.btnExecute = new JButton("Execute"), "wrap");
+			final String wrap = "wrap";
 			//
-			instance.btnExecute.addActionListener(instance);
+			instance.add(instance.btnExecute = new JButton("Execute"), wrap);
 			//
 			final JTable jTable = new JTable(instance.dtm = new DefaultTableModel(new Object[] { "Key", VALUE }, 0));
 			//
@@ -121,7 +127,11 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 			//
 			setMaxWidth(jTable.getColumn(VALUE), 96);
 			//
-			instance.add(new JScrollPane(jTable), "wmax 145,hmax 88");
+			instance.add(new JScrollPane(jTable), String.format("wmax %1$s,hmax %2$s,%3$s", 145, 88, wrap));
+			//
+			instance.add(instance.btnCopy = new JButton("Copy"), wrap);
+			//
+			forEach(Arrays.asList(instance.btnExecute, instance.btnCopy), x -> addActionListener(x, instance));
 			//
 			final JFrame jFrame = Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()) ? new JFrame()
 					: null;
@@ -166,6 +176,34 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 			} // for
 				//
+		} // if
+			//
+	}
+
+	private static <T> void forEach(final Iterable<T> instance, final Consumer<T> consumer) {
+		if (instance != null) {
+			instance.forEach(consumer);
+		}
+	}
+
+	private static void addActionListener(final AbstractButton instance, final ActionListener actionListener) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Field field = testAndApply(x -> IterableUtils.size(x) == 1,
+				collect(filter(
+						stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
+						x -> Objects.equals(getName(x), "listenerList")), Collectors.toList()),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		if (field == null || Narcissus.getField(instance, field) != null) {
+			//
+			instance.addActionListener(actionListener);
+			//
 		} // if
 			//
 	}
@@ -425,7 +463,9 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		if (Objects.equals(getSource(evt), btnExecute)) {
+		final Object source = getSource(evt);
+		//
+		if (Objects.equals(source, btnExecute)) {
 			//
 			try {
 				//
@@ -452,6 +492,37 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				error(LOG, e != null ? e.getMessage() : null, e);
 				//
 			} // try
+				//
+		} else if (Objects.equals(source, btnCopy)) {
+			//
+			Map<Object, Object> map = null;
+			//
+			final int columnCount = dtm != null ? dtm.getColumnCount() : 0;
+			//
+			for (int i = 0; dtm != null && i < getRowCount(dtm); i++) {
+				//
+				put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), columnCount > 0 ? dtm.getValueAt(i, 0) : null,
+						columnCount > 1 ? dtm.getValueAt(i, 1) : null);
+				//
+			} // for
+				//
+			if (map != null) {
+				//
+				map.remove(null);
+				//
+			} // if
+				//
+			final Toolkit toolKit = Toolkit.getDefaultToolkit();
+			//
+			final Clipboard clipboard = toolKit != null && !GraphicsEnvironment.isHeadless() && !isTestMode()
+					? toolKit.getSystemClipboard()
+					: null;
+			//
+			if (clipboard != null) {
+				//
+				clipboard.setContents(new StringSelection(new ObjectMapper().writeValueAsString(map)), null);
+				//
+			} // if
 				//
 		} // if
 			//

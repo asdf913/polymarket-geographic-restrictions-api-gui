@@ -366,6 +366,10 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 					//
 					add(collection, Class.class);
 					//
+				} else if (Objects.equals(parameterType, AbstractButton.class)) {
+					//
+					add(collection, Narcissus.allocateInstance(JButton.class));
+					//
 				} else {
 					//
 					add(collection, Narcissus.allocateInstance(parameterType));
@@ -561,6 +565,14 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 			//
 		} // for
 			//
+			// btnCopy
+			//
+		final AbstractButton btnCopy = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopy", btnCopy, true);
+		//
+		instance.actionPerformed(new ActionEvent(btnCopy, 0, null));
+		//
 	}
 
 	@Test
