@@ -436,16 +436,18 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 					//
 			} catch (final IOException e) {
 				//
-				if (e != null) {
-					//
-					e.printStackTrace();
-					//
-				} // if
-					//
+				error(LOG, e != null ? e.getMessage() : null, e);
+				//
 			} // try
 				//
 		} // if
 			//
+	}
+
+	private static void error(final Logger instance, final String message, final Throwable throwable) {
+		if (instance != null) {
+			instance.error(message, throwable);
+		}
 	}
 
 	private static void removeRow(final DefaultTableModel instance, final int row) {
