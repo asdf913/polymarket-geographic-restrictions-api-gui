@@ -96,7 +96,16 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 
 	private static LibNM libnm = null;
 
-	private AbstractButton btnExecute, btnCopy = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Execute")
+	private AbstractButton btnExecute = null;
+
+	private AbstractButton btnCopy = null;
 
 	private DefaultTableModel dtm = null;
 
