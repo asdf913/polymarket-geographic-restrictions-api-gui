@@ -68,6 +68,7 @@ import com.sun.jna.platform.win32.Kernel32Util;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
+import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.ObjectWriter;
 
@@ -516,17 +517,35 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 				final ObjectMapper objectMapper = new ObjectMapper();
 				//
-				final ObjectWriter objectWriter = btnFormatJson != null && btnFormatJson.isSelected()
-						? objectMapper.writerWithDefaultPrettyPrinter()
-						: objectMapper.writer();
-				//
 				clipboard.setContents(
-						new StringSelection(objectWriter != null ? objectWriter.writeValueAsString(map) : null), null);
+						new StringSelection(writeValueAsString(btnFormatJson != null && btnFormatJson.isSelected()
+								? objectMapper.writerWithDefaultPrettyPrinter()
+								: objectMapper.writer(), map)),
+						null);
 				//
 			} // if
 				//
 		} // if
 			//
+	}
+
+	private static String writeValueAsString(final ObjectWriter instance, final Object value) throws JacksonException {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Field field = testAndApply(x -> IterableUtils.size(x) == 1,
+				collect(filter(
+						stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
+						x -> Objects.equals(getName(x), "_generatorFactory")), Collectors.toList()),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		return (field == null || Narcissus.getField(instance, field) != null) ? instance.writeValueAsString(value)
+				: null;
+		//
 	}
 
 	private static <T> T testAndGet(final boolean condition, final Supplier<T> instance) {

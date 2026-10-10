@@ -48,6 +48,7 @@ import com.google.common.base.Suppliers;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import tools.jackson.databind.ObjectWriter;
 
 public class PolymarketGeographicRestrictionsApiGuiTest {
 
@@ -465,7 +466,9 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 					|| Boolean.logicalAnd(Objects.equals(name, "getSystemClipboard"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Toolkit.class }))
 					|| Boolean.logicalAnd(Objects.equals(name, "testAndGet"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Boolean.TYPE, Supplier.class }))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { Boolean.TYPE, Supplier.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "writeValueAsString"),
+							Arrays.equals(parameterTypes, new Class<?>[] { ObjectWriter.class, Object.class }))) {
 				//
 				Assert.assertNull(result, toString);
 				//
