@@ -517,9 +517,8 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 				final ObjectMapper objectMapper = new ObjectMapper();
 				//
-				clipboard.setContents(
-						new StringSelection(writeValueAsString(btnFormatJson != null && btnFormatJson.isSelected()
-								? objectMapper.writerWithDefaultPrettyPrinter()
+				clipboard.setContents(new StringSelection(
+						writeValueAsString(isSelected(btnFormatJson) ? objectMapper.writerWithDefaultPrettyPrinter()
 								: objectMapper.writer(), map)),
 						null);
 				//
@@ -527,6 +526,24 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 		} // if
 			//
+	}
+
+	private static boolean isSelected(final AbstractButton instance) {
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		final Field field = testAndApply(x -> IterableUtils.size(x) == 1,
+				collect(filter(
+						stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
+						x -> Objects.equals(getName(x), "model")), Collectors.toList()),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		return (field == null || Narcissus.getField(instance, field) != null) && instance.isSelected();
+		//
 	}
 
 	private static String writeValueAsString(final ObjectWriter instance, final Object value) throws JacksonException {
