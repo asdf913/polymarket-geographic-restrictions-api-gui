@@ -58,6 +58,8 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.eclipse.collections.api.block.function.primitive.ObjectIntToObjectFunction;
+import org.eclipse.collections.api.block.predicate.primitive.ObjectIntPredicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -503,8 +505,9 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 			//
 			for (int i = 0; dtm != null && i < getRowCount(dtm); i++) {
 				//
-				put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), columnCount > 0 ? dtm.getValueAt(i, 0) : null,
-						columnCount > 1 ? dtm.getValueAt(i, 1) : null);
+				put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new),
+						acceptAndValueOf((a, b) -> columnCount > 0, dtm, i, (a, b) -> getValueAt(a, b, 0), null),
+						acceptAndValueOf((a, b) -> columnCount > 1, dtm, i, (a, b) -> getValueAt(a, b, 1), null));
 				//
 			} // for
 				//
@@ -526,6 +529,22 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 				//
 		} // if
 			//
+	}
+
+	private static Object getValueAt(final TableModel instance, final int rowIndex, final int columnIndex) {
+		return instance != null ? instance.getValueAt(rowIndex, columnIndex) : null;
+	}
+
+	private static <T, R> R acceptAndValueOf(final ObjectIntPredicate<T> predicate, final T value, final int integer,
+			final ObjectIntToObjectFunction<T, R> functionTrue, final ObjectIntToObjectFunction<T, R> functionFalse) {
+		//
+		return predicate != null && predicate.accept(value, integer) ? valueOf(functionTrue, value, integer)
+				: valueOf(functionFalse, value, integer);
+		//
+	}
+
+	private static <T, R> R valueOf(final ObjectIntToObjectFunction<T, R> instance, final T value, final int integer) {
+		return instance != null ? instance.valueOf(value, integer) : null;
 	}
 
 	private static boolean isSelected(final AbstractButton instance) {

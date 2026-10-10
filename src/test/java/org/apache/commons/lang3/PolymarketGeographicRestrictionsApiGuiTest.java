@@ -38,6 +38,8 @@ import javax.swing.table.TableModel;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.eclipse.collections.api.block.function.primitive.ObjectIntToObjectFunction;
+import org.eclipse.collections.api.block.predicate.primitive.ObjectIntPredicate;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -89,7 +91,7 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Boolean test;
+		private Boolean test, accept;
 
 		private Integer rowCount, columnCount;
 
@@ -141,6 +143,15 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 				//
 				return null;
 				//
+			} else if (Boolean.logicalAnd(proxy instanceof ObjectIntPredicate, Objects.equals(name, "accept"))) {
+				//
+				return accept;
+				//
+			} else if (Boolean.logicalAnd(proxy instanceof ObjectIntToObjectFunction,
+					Objects.equals(name, "valueOf"))) {
+				//
+				return null;
+				//
 			} else if (proxy instanceof TableModel) {
 				//
 				if (Objects.equals(name, "getRowCount")) {
@@ -150,6 +161,10 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 				} else if (Objects.equals(name, "getColumnCount")) {
 					//
 					return columnCount;
+					//
+				} else if (Objects.equals(name, "getValueAt")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -468,7 +483,16 @@ public class PolymarketGeographicRestrictionsApiGuiTest {
 					|| Boolean.logicalAnd(Objects.equals(name, "testAndGet"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Boolean.TYPE, Supplier.class }))
 					|| Boolean.logicalAnd(Objects.equals(name, "writeValueAsString"),
-							Arrays.equals(parameterTypes, new Class<?>[] { ObjectWriter.class, Object.class }))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { ObjectWriter.class, Object.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "valueOf"),
+							Arrays.equals(parameterTypes,
+									new Class<?>[] { ObjectIntToObjectFunction.class, Object.class, Integer.TYPE }))
+					|| Boolean.logicalAnd(Objects.equals(name, "acceptAndValueOf"),
+							Arrays.equals(parameterTypes,
+									new Class<?>[] { ObjectIntPredicate.class, Object.class, Integer.TYPE,
+											ObjectIntToObjectFunction.class, ObjectIntToObjectFunction.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "getValueAt"), Arrays.equals(parameterTypes,
+							new Class<?>[] { TableModel.class, Integer.TYPE, Integer.TYPE, }))) {
 				//
 				Assert.assertNull(result, toString);
 				//
