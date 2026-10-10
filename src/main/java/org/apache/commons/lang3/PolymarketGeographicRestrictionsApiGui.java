@@ -43,6 +43,7 @@ import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -68,6 +69,7 @@ import com.sun.jna.platform.win32.Kernel32Util;
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
 
 public class PolymarketGeographicRestrictionsApiGui extends JPanel implements ActionListener {
 
@@ -105,7 +107,7 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton btnCopy = null;
+	private AbstractButton btnCopy, btnFormatJson = null;
 
 	private DefaultTableModel dtm = null;
 
@@ -138,6 +140,8 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 			setMaxWidth(jTable.getColumn(VALUE), 96);
 			//
 			instance.add(new JScrollPane(jTable), String.format("wmax %1$s,hmax %2$s,%3$s", 145, 88, wrap));
+			//
+			instance.add(instance.btnFormatJson = new JCheckBox("Format JSON"), wrap);
 			//
 			instance.add(instance.btnCopy = new JButton("Copy"), wrap);
 			//
@@ -507,7 +511,14 @@ public class PolymarketGeographicRestrictionsApiGui extends JPanel implements Ac
 			//
 			if (clipboard != null) {
 				//
-				clipboard.setContents(new StringSelection(new ObjectMapper().writeValueAsString(map)), null);
+				final ObjectMapper objectMapper = new ObjectMapper();
+				//
+				final ObjectWriter objectWriter = btnFormatJson != null && btnFormatJson.isSelected()
+						? objectMapper.writerWithDefaultPrettyPrinter()
+						: objectMapper.writer();
+				//
+				clipboard.setContents(
+						new StringSelection(objectWriter != null ? objectWriter.writeValueAsString(map) : null), null);
 				//
 			} // if
 				//
