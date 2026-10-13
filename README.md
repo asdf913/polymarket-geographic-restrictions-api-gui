@@ -4,7 +4,11 @@
 <a href="https://docs.polymarket.com/api-reference/geoblock">Geographic Restrictions - Polymarket Documentation</a>
 
 ## CUI
+
+#### Command
 <pre>java -jar polymarket-geographic-restrictions-api-gui-0.0.1-SNAPSHOT.jar</pre>
+
+##### Output
 <pre>WARNING: A restricted method in java.lang.System has been called
 WARNING: java.lang.System::load has been called by com.sun.jna.Native in an unnamed module (file:/home/lau-ka-ho/git/polymarket-geographic-restrictions-api-gui/target/polymarket-geographic-restrictions-api-gui-0.0.1-SNAPSHOT.jar)
 WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
